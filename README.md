@@ -192,6 +192,14 @@ On Windows PowerShell:
 $env:ALPHAVANTAGE_API_KEY="your_api_key_here"
 ```
 
+Or create a repo-root `.env` file:
+
+```bash
+ALPHAVANTAGE_API_KEY=your_api_key_here
+```
+
+The loader checks the environment variable first, then falls back to `.env`.
+
 ### 5. Download real daily data with a free Alpha Vantage key
 
 ```bash

@@ -60,14 +60,43 @@ OUTPUT_COLUMNS = [
 ]
 
 
+def _load_repo_dotenv(dotenv_path: str | Path | None = None) -> dict[str, str]:
+    """
+    Load simple KEY=VALUE pairs from a repo-root .env file.
+    """
+
+    env_path = Path(dotenv_path) if dotenv_path is not None else Path(__file__).resolve().parents[1] / ".env"
+    if not env_path.exists():
+        return {}
+
+    values: dict[str, str] = {}
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        values[key] = value
+
+    return values
+
+
 def get_alpha_vantage_api_key() -> str:
     """
-    Read the Alpha Vantage API key from the environment.
+    Read the Alpha Vantage API key from the environment, then fall back to
+    a repo-root .env file.
     """
 
     api_key = os.getenv("ALPHAVANTAGE_API_KEY", "").strip()
+    if api_key:
+        return api_key
+
+    dotenv_values = _load_repo_dotenv()
+    api_key = dotenv_values.get("ALPHAVANTAGE_API_KEY", "").strip()
     if not api_key:
-        raise ValueError("ALPHAVANTAGE_API_KEY is not set.")
+        raise ValueError("ALPHAVANTAGE_API_KEY is not set in the environment or the repo-root .env file.")
     return api_key
 
 
