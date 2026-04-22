@@ -1,0 +1,4 @@
+# TODO:
+# - Add core Python package dependencies for research.
+# - Prefer simple, standard libraries such as pandas, numpy, scipy,
+#   statsmodels, scikit-learn, and matplotlib when implementation begins.
