@@ -28,6 +28,7 @@ The repository currently includes:
 - an Alpha Vantage downloader for free daily U.S. equity data
 - a factor library for several simple daily equity factors
 - a transparent monthly rebalanced long-only backtester
+- a minimal walk-forward optimization layer
 - a lightweight performance analysis and reporting layer
 - unit tests and runnable demo scripts
 
@@ -47,6 +48,7 @@ notebooks/
   download_real_data.py
   factor_demo.py
   backtest_demo.py
+  optimization_demo.py
   research_demo.py
 reports/
   cumulative_returns.png
@@ -56,12 +58,14 @@ src/
   data_loader.py
   factor_library.py
   backtester.py
+  optimizer.py
   metrics.py
 tests/
   test_alpha_vantage_loader.py
   test_data_loader.py
   test_factor_library.py
   test_backtester.py
+  test_optimizer.py
   test_metrics.py
 requirements.txt
 README.md
@@ -181,6 +185,7 @@ python -m pytest tests\test_alpha_vantage_loader.py -p no:cacheprovider
 python -m pytest tests\test_data_loader.py -p no:cacheprovider
 python -m pytest tests\test_factor_library.py -p no:cacheprovider
 python -m pytest tests\test_backtester.py -p no:cacheprovider
+python -m pytest tests\test_optimizer.py -p no:cacheprovider
 python -m pytest tests\test_metrics.py -p no:cacheprovider
 ```
 
@@ -239,7 +244,20 @@ This:
 - runs the monthly long-only backtest
 - prints rebalance history, daily results preview, and summary metrics
 
-### 8. Run the full research demo
+### 8. Run the optimization demo
+
+```bash
+python notebooks\optimization_demo.py
+```
+
+This:
+
+- loads `data/processed/real_daily_prices.csv`
+- tests a small grid of existing factors, top-N choices, and transaction cost assumptions
+- selects parameters using validation-period Sharpe ratio
+- reports test-period metrics separately
+
+### 9. Run the full research demo
 
 ```bash
 python notebooks\research_demo.py
